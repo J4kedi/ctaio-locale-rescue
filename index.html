@@ -1,0 +1,479 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><style>body{margin:0}[hidden]{display:none!important}</style></head><body><title>CTAIO Locale Rescue</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+:root{
+  --bg:#f5f4ef; --surface:#ffffff; --ink:#17191e; --muted:#5a606d; --line:#e2dfd6;
+  --accent:#b9470b; --accent-ink:#ffffff; --ok:#1d7a3d; --bad:#b42318; --warn:#946200;
+  --ok-bg:#e8f4ec; --bad-bg:#fbeceb; --warn-bg:#fbf3e0; --code-bg:#eeece4;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#111318; --surface:#181b22; --ink:#e8e6e0; --muted:#9ba1ad; --line:#2a2f39;
+  --accent:#f4874b; --accent-ink:#1a0d05; --ok:#5fd08a; --bad:#f2837a; --warn:#f0c15a;
+  --ok-bg:#15291d; --bad-bg:#2e1715; --warn-bg:#2c2412; --code-bg:#1d212a; color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --bg:#111318; --surface:#181b22; --ink:#e8e6e0; --muted:#9ba1ad; --line:#2a2f39;
+  --accent:#f4874b; --accent-ink:#1a0d05; --ok:#5fd08a; --bad:#f2837a; --warn:#f0c15a;
+  --ok-bg:#15291d; --bad-bg:#2e1715; --warn-bg:#2c2412; --code-bg:#1d212a; color-scheme:dark;
+}
+body{background:var(--bg);color:var(--ink);font:15px/1.6 "IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif}
+.wrap{max-width:1000px;margin:0 auto;padding:40px 16px 64px;display:grid;gap:48px}
+h1,h2,h3{text-wrap:balance;line-height:1.2;margin:0}
+h1{font-size:clamp(28px,4.6vw,42px);font-weight:600;letter-spacing:-.01em;max-width:22ch}
+h2{font-size:22px;font-weight:600}
+h3{font-size:16px;font-weight:600}
+p,ol,ul{margin:0;max-width:68ch}
+section,header{display:grid;gap:16px;min-width:0}
+.eyebrow{font:500 12px/1 "IBM Plex Mono",ui-monospace,monospace;letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
+.lede{font-size:17px;color:var(--muted)}
+.small{font-size:13.5px;color:var(--muted)}
+a{color:var(--accent)}
+code,pre,.mono{font-family:"IBM Plex Mono",ui-monospace,SFMono-Regular,Consolas,monospace}
+code{font-size:.92em;background:var(--code-bg);padding:1px 5px;border-radius:4px}
+pre.code{margin:0;background:var(--code-bg);border:1px solid var(--line);border-radius:8px;padding:14px 16px;font-size:12.5px;line-height:1.55;overflow-x:auto;white-space:pre}
+pre.wrap-text{white-space:pre-wrap;word-break:break-word}
+.tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:8px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:14px}
+th,td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+tr:last-child td{border-bottom:0}
+th{font:500 11.5px/1.3 "IBM Plex Mono",ui-monospace,monospace;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);background:var(--bg)}
+td.k{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:12.5px;color:var(--muted);white-space:nowrap}
+td.num{font-variant-numeric:tabular-nums;font-family:"IBM Plex Mono",ui-monospace,monospace}
+.pill{display:inline-block;font:500 12px/1 "IBM Plex Mono",ui-monospace,monospace;padding:4px 7px;border-radius:5px}
+.pill.ok{color:var(--ok);background:var(--ok-bg)}
+.pill.bad{color:var(--bad);background:var(--bad-bg)}
+.pill.warn{color:var(--warn);background:var(--warn-bg)}
+.toolbar{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between}
+.tabs,.actions,.checks{display:flex;flex-wrap:wrap;gap:8px}
+button{font:500 14px/1 "IBM Plex Sans",system-ui,sans-serif;padding:9px 14px;border-radius:7px;border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer}
+button:hover{border-color:var(--muted)}
+button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+button.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+button[aria-selected="true"]{background:var(--ink);border-color:var(--ink);color:var(--bg)}
+button:disabled{opacity:.55;cursor:default}
+.label{font-size:13.5px;color:var(--muted)}
+.status{font-size:14px;color:var(--warn);min-height:1.2em}
+.issue{display:block;font-size:12.5px;line-height:1.4;margin-top:2px}
+.issue.bad{color:var(--bad)}.issue.warn{color:var(--warn)}
+td.missing{color:var(--bad);font-style:italic}
+.note-list{display:grid;gap:6px;padding-left:20px}
+details{border:1px solid var(--line);border-radius:8px;background:var(--surface);padding:12px 16px}
+details[open]{display:grid;gap:12px}
+summary{cursor:pointer;font-weight:600}
+.row{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+footer{font-size:13px;color:var(--muted);border-top:1px solid var(--line);padding-top:16px}
+</style>
+
+<div class="wrap">
+<header>
+  <p class="eyebrow">For ctaio.dev · checked 1 Oct 2026</p>
+  <h1>Three of ctaio.dev's six languages return 403</h1>
+  <p class="lede">The /en/ and /de/ homepages tell search engines that French, Brazilian Portuguese and Spanish versions exist. Request them and nginx answers 403 Forbidden. Below: the fix for today, and a safe way to actually ship those three languages.</p>
+</header>
+
+<section>
+  <h2>1 · What the site declares vs. what answers</h2>
+  <div class="tablewrap"><table>
+    <thead><tr><th>hreflang</th><th>URL</th><th>Status</th></tr></thead>
+    <tbody>
+      <tr><td class="k">en</td><td class="mono">/en/</td><td><span class="pill ok">200</span></td></tr>
+      <tr><td class="k">de</td><td class="mono">/de/</td><td><span class="pill ok">200</span></td></tr>
+      <tr><td class="k">fr</td><td class="mono">/fr/</td><td><span class="pill bad">403</span></td></tr>
+      <tr><td class="k">pt-BR</td><td class="mono">/br/</td><td><span class="pill bad">403</span></td></tr>
+      <tr><td class="k">es</td><td class="mono">/es/</td><td><span class="pill bad">403</span></td></tr>
+      <tr><td class="k">id</td><td class="mono">/id/</td><td><span class="pill ok">200</span></td></tr>
+      <tr><td class="k">x-default</td><td class="mono">/en/</td><td><span class="pill ok">200</span></td></tr>
+    </tbody>
+  </table></div>
+  <p class="small">Same result from Node's fetch and from a browser, while /en/, /de/ and /id/ answer 200 to the same clients, so it isn't a bot filter. Also on the homepage: the Spotify, Apple Podcasts and YouTube buttons point to <code>href="#"</code>.</p>
+  <h3>Fix today</h3>
+  <ol class="note-list">
+    <li>Emit hreflang only for locales that have a built index page.</li>
+    <li>Gate the deploy with <code>ctaio-audit.mjs</code> (Node 18+, no dependencies, source below): it exits 1 on any alternate that isn't 200 and on any placeholder link.</li>
+  </ol>
+  <pre class="code">$ node ctaio-audit.mjs https://ctaio.dev/en/
+https://ctaio.dev/en/ -> 200
+ok    canonical        https://ctaio.dev/en/  200
+ok    hreflang en      https://ctaio.dev/en/  200
+ok    hreflang de      https://ctaio.dev/de/  200
+FAIL  hreflang fr      https://ctaio.dev/fr/  403
+FAIL  hreflang pt-BR   https://ctaio.dev/br/  403
+FAIL  hreflang es      https://ctaio.dev/es/  403
+ok    hreflang id      https://ctaio.dev/id/  200
+ok    hreflang x-default https://ctaio.dev/en/  200
+warn  images without alt: 0
+3 broken target(s), 0 placeholder link(s)</pre>
+  <details>
+    <summary>Source of ctaio-audit.mjs</summary>
+    <pre class="code">#!/usr/bin/env node
+// ctaio-audit.mjs: checks that every hreflang/canonical target on a page resolves,
+// and flags placeholder links (href="#") and images without alt.
+// Usage: node ctaio-audit.mjs https://ctaio.dev/en/   (Node 18+, no dependencies)
+// Exit 1 on a broken target or placeholder link, so it can gate a deploy.
+// ponytail: regex over HTML is enough for &lt;link&gt;/&lt;a&gt;/&lt;img&gt; attributes; use a DOM parser if markup gets exotic.
+import assert from 'node:assert/strict';
+
+const attrs = (tag) =&gt; Object.fromEntries(
+  [...tag.matchAll(/([\w:-]+)\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s&gt;]+))/g)]
+    .map((m) =&gt; [m[1].toLowerCase(), m[2] ?? m[3] ?? m[4]]));
+
+export function scan(html, base) {
+  const targets = [...html.matchAll(/&lt;link\b[^&gt;]*&gt;/gi)].map((m) =&gt; attrs(m[0]))
+    .filter((a) =&gt; a.href &amp;&amp; (a.hreflang || (a.rel || '').toLowerCase() === 'canonical'))
+    .map((a) =&gt; ({ label: a.hreflang ? `hreflang ${a.hreflang}` : 'canonical', url: new URL(a.href, base).href }));
+  const placeholders = [...html.matchAll(/&lt;a\b([^&gt;]*)&gt;([\s\S]*?)&lt;\/a&gt;/gi)]
+    .filter((m) =&gt; attrs(m[1]).href === '#')
+    .map((m) =&gt; m[2].replace(/&lt;[^&gt;]+&gt;/g, ' ').replace(/\s+/g, ' ').trim() || '(no text)');
+  const imgsWithoutAlt = [...html.matchAll(/&lt;img\b[^&gt;]*&gt;/gi)].filter((m) =&gt; !('alt' in attrs(m[0]))).length;
+  return { targets, placeholders, imgsWithoutAlt };
+}
+
+if (process.argv[2] === '--self-test') {
+  const r = scan(`&lt;link rel="alternate" hreflang="fr" href="/fr/"&gt;&lt;link href='/x' rel=canonical&gt;
+    &lt;a class=b href="#"&gt;&lt;span&gt;Spotify&lt;/span&gt;&lt;/a&gt;&lt;a href="/ok"&gt;ok&lt;/a&gt;&lt;img src=a.png&gt;&lt;img alt="" src=b.png&gt;`, 'https://e.com/en/');
+  assert.deepEqual(r.targets, [{ label: 'hreflang fr', url: 'https://e.com/fr/' }, { label: 'canonical', url: 'https://e.com/x' }]);
+  assert.deepEqual(r.placeholders, ['Spotify']);
+  assert.equal(r.imgsWithoutAlt, 1);
+  console.log('self-test ok');
+  process.exit(0);
+}
+
+const page = process.argv[2] || 'https://ctaio.dev/en/';
+const res = await fetch(page);
+console.log(`${page} -&gt; ${res.status}`);
+if (!res.ok) { console.log('The page itself did not load; fix that (or the bot filter) before trusting the rest.'); process.exit(2); }
+const { targets, placeholders, imgsWithoutAlt } = scan(await res.text(), res.url);
+
+let broken = 0;
+for (const t of targets) {
+  let s;
+  try { const r = await fetch(t.url); s = `${r.status}${r.url !== t.url ? ` (redirected to ${new URL(r.url).pathname})` : ''}`; if (!r.ok) broken++; }
+  catch (e) { s = `ERR ${e.cause?.code || e.message}`; broken++; }
+  console.log(`${s.startsWith('2') ? 'ok  ' : 'FAIL'}  ${t.label.padEnd(16)} ${t.url}  ${s}`);
+}
+for (const p of placeholders) console.log(`FAIL  link href="#"      "${p}"`);
+console.log(`warn  images without alt: ${imgsWithoutAlt}`);
+console.log(`${broken} broken target(s), ${placeholders.length} placeholder link(s)`);
+process.exitCode = broken || placeholders.length ? 1 : 0;</pre>
+  </details>
+</section>
+
+<section>
+  <h2>2 · Ship the languages without breaking the brand</h2>
+  <p>Translating thirteen UI strings with a model is easy. Shipping them safely is the hard part. Here the model's reply goes through checks a script runs, so the model never grades itself. If a hard check fails, the exact failures go back to the model once.</p>
+  <div class="toolbar">
+    <div class="tabs" role="tablist" aria-label="Language">
+      <button role="tab" data-l="pt-BR">pt-BR</button><button role="tab" data-l="es">es</button><button role="tab" data-l="fr">fr</button>
+    </div>
+    <div class="actions">
+      <button id="run" class="primary" hidden>Run live with Claude</button>
+      <button id="stop" hidden>Stop</button>
+      <button id="break">Feed it a bad reply</button>
+    </div>
+  </div>
+  <p id="label" class="label"></p>
+  <p id="status" class="status" role="status"></p>
+  <div id="checks" class="checks"></div>
+  <div class="tablewrap"><table>
+    <thead><tr><th>Key</th><th>English</th><th id="thLocale">pt-BR</th><th>Checks</th></tr></thead>
+    <tbody id="rows"></tbody>
+  </table></div>
+  <div id="notesBox"><h3>Notes for the human editor</h3><ul id="notes" class="note-list"></ul></div>
+  <div id="repairBox" hidden style="display:grid;gap:10px"><h3>What goes back to the model</h3><pre class="code wrap-text" id="repair"></pre></div>
+  <details>
+    <summary>The prompt (<span id="pLocale">pt-BR</span>)</summary>
+    <div class="row"><button id="copy">Copy prompt</button><span id="copied" class="label"></span></div>
+    <pre class="code wrap-text" id="prompt"></pre>
+  </details>
+</section>
+
+<section>
+  <h2>3 · How this was built</h2>
+  <ul class="note-list">
+    <li>Claude Code (Opus 5.5) in my terminal, with browser access, in one sitting.</li>
+    <li>What the AI got right: the hreflang-to-403 finding and the three placeholder buttons, each backed by a real request.</li>
+    <li>What I corrected: a first pass counted 12 images "without alt". All 12 have <code>alt=""</code>, which is valid for decorative images. The audit now checks for a missing attribute, and that claim was dropped.</li>
+    <li>The checks are plain JavaScript with tests. "AI" is matched with Unicode-aware lookarounds, because JavaScript's <code>\b</code> only knows ASCII letters.</li>
+  </ul>
+</section>
+
+<footer>Kauan Pardini Augusto · github.com/J4kedi · built for the We The Flywheel assessment</footer>
+</div>
+
+<script>
+// Shared by the page and test.cjs. The checks are deterministic: the model never grades itself.
+const SOURCE = {
+  meta_title: "CTAIO — The Newsletter for Technology's Next C-Suite Role",
+  meta_description: "Weekly intelligence on AI strategy, enterprise infrastructure, and the convergence of CTO + CIO + AI. By a practitioner who ships code and runs the org.",
+  hero_eyebrow: "TECH LEADERSHIP IN THE AI ERA",
+  hero_title: "The Weekly Newsletter for Technology's Next C-Suite Role",
+  cta_subscribe: "Subscribe free",
+  nav_jobs: "Jobs",
+  nav_ask_ai: "Ask AI",
+  nav_weekly_ai_edge: "Weekly AI Edge",
+  card_salary_guide: "CTO Salary Guide (2026)",
+  card_strategy_brief: "Weekly AI Strategy Brief",
+  card_podcast: "CTAIO Labs Podcast",
+  cta_view_roles: "View all roles →",
+  cta_post_role: "Post a role →",
+};
+// Longest first, so "CTAIO Labs" is consumed before "CTAIO".
+const PROTECTED = ["Weekly AI Edge", "CTAIO Labs", "CTAIO", "CTO", "CIO"];
+const LOCALES = {
+  "pt-BR": { name: "Brazilian Portuguese", market: "Brazil" },
+  es: { name: "Spanish", market: "Spain and Latin America" },
+  fr: { name: "French", market: "France" },
+};
+
+function buildPrompt(locale) {
+  const L = LOCALES[locale];
+  return [
+    `You are a senior localizer for ctaio.dev, a weekly newsletter for engineering leaders growing into the CTAIO role (CTO + CIO + AI). Translate the UI strings below from English into ${L.name} (${locale}).`,
+    "",
+    `Audience: CTOs, VPs of Engineering and tech executives in ${L.market}. Tone: direct, practitioner, no hype. Prefer the words a tech executive there actually uses over a literal translation.`,
+    "",
+    "Hard rules. A script checks every one and sends failures back to you:",
+    "1. Return every key exactly once. Add no keys.",
+    `2. Copy these names exactly, never translated or inflected: ${PROTECTED.join(", ")}.`,
+    '3. Keep every number and the symbols "+" and "→" exactly as in the source.',
+    '4. Outside those names, write "AI" as "IA".',
+    "",
+    "Soft rules:",
+    "5. Keys starting with nav_ or cta_ are navigation and buttons: keep them short. If the natural label is much longer than the English, keep it and say so in notes.",
+    "6. If a phrase has no natural equivalent, translate the meaning and explain the choice in notes.",
+    "",
+    'Reply with only this JSON: {"strings": {"<key>": "<translation>"}, "notes": ["<one choice a human editor should review>"]}',
+    "",
+    "Strings:",
+    JSON.stringify(SOURCE, null, 2),
+  ].join("\n");
+}
+
+const esc = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+// JavaScript's \b only knows ASCII letters (accented letters count as boundaries), so use Unicode lookarounds.
+const word = (w) => new RegExp(`(?<![\\p{L}\\p{N}])${esc(w)}(?![\\p{L}\\p{N}])`, "gu");
+const count = (text, token) => text.split(token).length - 1;
+
+function validate(out) {
+  const hard = [], soft = [];
+  const strings = out && typeof out === "object" && out.strings && typeof out.strings === "object" ? out.strings : null;
+  if (!strings) return { hard: [{ key: "*", check: "keys", msg: 'Reply has no "strings" object.' }], soft, notes: [] };
+  for (const k of Object.keys(SOURCE)) {
+    if (typeof strings[k] !== "string" || !strings[k].trim()) hard.push({ key: k, check: "keys", msg: `Missing key "${k}".` });
+  }
+  for (const k of Object.keys(strings)) if (!(k in SOURCE)) hard.push({ key: k, check: "keys", msg: `Unexpected key "${k}".` });
+  for (const [k, src] of Object.entries(SOURCE)) {
+    const t = strings[k];
+    if (typeof t !== "string") continue;
+    let s = src, rest = t;
+    for (const name of PROTECTED) {
+      const need = (s.match(word(name)) || []).length;
+      if ((rest.match(word(name)) || []).length < need) hard.push({ key: k, check: "protected", msg: `"${name}" must appear exactly as written.` });
+      s = s.replace(word(name), " ");
+      rest = rest.replace(word(name), " ");
+    }
+    for (const tok of new Set(src.match(/\d+|[+→]/g) || [])) {
+      if (count(t, tok) < count(src, tok)) hard.push({ key: k, check: "numbers", msg: `Keep "${tok}" exactly as in the source.` });
+    }
+    if (word("AI").test(rest)) hard.push({ key: k, check: "glossary", msg: 'Write "AI" as "IA" outside product names.' });
+    if (/^(nav|cta)_/.test(k)) {
+      const limit = Math.max(Math.ceil(src.length * 1.6), src.length + 6);
+      if (t.length > limit) soft.push({ key: k, check: "length", msg: `${t.length} chars vs ${src.length} in English (limit ${limit}): check the layout.` });
+    }
+  }
+  const notes = Array.isArray(out.notes) ? out.notes.filter((n) => typeof n === "string").slice(0, 8) : [];
+  return { hard, soft, notes };
+}
+
+function repairPrompt(failures) {
+  return "A script rejected your reply. Fix only these problems and return the complete JSON again, same format:\n" +
+    failures.map((f) => `- ${f.key}: ${f.msg}`).join("\n");
+}
+
+// The mistakes a model really makes here: brand inflected, glossary applied inside a product name,
+// a number dropped, "AI" left in English, a key lost, a key invented.
+function corrupt(o) {
+  const s = { ...o.strings };
+  s.meta_title = s.meta_title.replace("CTAIO", "CTAIA");
+  s.hero_eyebrow = s.hero_eyebrow.replace(/IA$/, "AI");
+  s.card_salary_guide = s.card_salary_guide.replace(" (2026)", "");
+  s.nav_weekly_ai_edge = "Weekly IA Edge";
+  delete s.cta_post_role;
+  s.nav_home = "Home";
+  return { strings: s, notes: [] };
+}
+
+// Written by Claude (Opus 5.5, in Claude Code) from buildPrompt() on 1 Oct 2026.
+const SAMPLES = {
+  "pt-BR": {
+    strings: {
+      meta_title: "CTAIO — A newsletter para o próximo cargo C-level da tecnologia",
+      meta_description: "Análise semanal sobre estratégia de IA, infraestrutura corporativa e a convergência de CTO + CIO + IA. Por quem coloca código em produção e lidera a área.",
+      hero_eyebrow: "LIDERANÇA EM TECNOLOGIA NA ERA DA IA",
+      hero_title: "A newsletter semanal sobre o próximo cargo C-level da tecnologia",
+      cta_subscribe: "Assine grátis",
+      nav_jobs: "Vagas",
+      nav_ask_ai: "Pergunte à IA",
+      nav_weekly_ai_edge: "Weekly AI Edge",
+      card_salary_guide: "Guia salarial de CTO (2026)",
+      card_strategy_brief: "Briefing semanal de estratégia de IA",
+      card_podcast: "Podcast CTAIO Labs",
+      cta_view_roles: "Ver todas as vagas →",
+      cta_post_role: "Anunciar uma vaga →",
+    },
+    notes: [
+      "\"C-Suite\" became \"C-level\", the term Brazilian executives use.",
+      "\"Ask AI\" is longer in Portuguese (13 vs 6 chars): check the nav at mobile width, or use \"IA\" alone.",
+      "\"Newsletter\" kept as a loanword, standard in Brazilian tech media.",
+    ],
+  },
+  es: {
+    strings: {
+      meta_title: "CTAIO — La newsletter del próximo cargo C-level en tecnología",
+      meta_description: "Análisis semanal sobre estrategia de IA, infraestructura empresarial y la convergencia de CTO + CIO + IA. Escrito por alguien que lleva código a producción y dirige la organización.",
+      hero_eyebrow: "LIDERAZGO TECNOLÓGICO EN LA ERA DE LA IA",
+      hero_title: "La newsletter semanal del próximo cargo C-level en tecnología",
+      cta_subscribe: "Suscríbete gratis",
+      nav_jobs: "Empleos",
+      nav_ask_ai: "Pregunta a la IA",
+      nav_weekly_ai_edge: "Weekly AI Edge",
+      card_salary_guide: "Guía salarial de CTO (2026)",
+      card_strategy_brief: "Informe semanal de estrategia de IA",
+      card_podcast: "Podcast CTAIO Labs",
+      cta_view_roles: "Ver todos los puestos →",
+      cta_post_role: "Publicar un puesto →",
+    },
+    notes: [
+      "\"C-Suite\" kept as \"C-level\", understood in Spain and Latin America; \"alta dirección\" is the formal option.",
+      "Used tú (\"Suscríbete\", \"Pregunta\"), the norm for newsletters; switch to usted for a formal voice.",
+      "\"Ask AI\" is longer in Spanish (16 vs 6 chars): check the nav at mobile width.",
+    ],
+  },
+  fr: {
+    strings: {
+      meta_title: "CTAIO — La newsletter du prochain poste C-level de la tech",
+      meta_description: "Une analyse hebdomadaire de la stratégie IA, de l'infrastructure d'entreprise et de la convergence CTO + CIO + IA. Par un praticien qui livre du code et dirige l'organisation.",
+      hero_eyebrow: "LE LEADERSHIP TECH À L'ÈRE DE L'IA",
+      hero_title: "La newsletter hebdomadaire du prochain poste C-level de la tech",
+      cta_subscribe: "S'abonner gratuitement",
+      nav_jobs: "Emplois",
+      nav_ask_ai: "Demander à l'IA",
+      nav_weekly_ai_edge: "Weekly AI Edge",
+      card_salary_guide: "Guide des salaires CTO (2026)",
+      card_strategy_brief: "Brief hebdomadaire stratégie IA",
+      card_podcast: "Podcast CTAIO Labs",
+      cta_view_roles: "Voir tous les postes →",
+      cta_post_role: "Publier une offre →",
+    },
+    notes: [
+      "\"C-Suite\" became \"C-level\", common in the French business press; \"comité de direction\" is the formal option.",
+      "Kept \"tech\": French tech media use it more than \"technologie\" in headlines.",
+      "\"Ask AI\" is longer in French (15 vs 6 chars): check the nav at mobile width.",
+    ],
+  },
+};
+
+if (typeof module !== "undefined") module.exports = { SOURCE, PROTECTED, LOCALES, buildPrompt, validate, repairPrompt, corrupt, SAMPLES };
+
+
+const $ = (id) => document.getElementById(id);
+const LABEL = {
+  sample: "Sample reply: written by Claude (Opus 5.5, in Claude Code) from this prompt on 1 Oct 2026.",
+  bad: "A deliberately broken reply, to show what the checks catch.",
+  live: "Live reply from Claude, just now.",
+  repaired: "Live reply from Claude, repaired once after the checks failed.",
+};
+const CHECKS = [["keys", "Every key, none extra"], ["protected", "Brand names untouched"], ["numbers", "Numbers and + → kept"], ["glossary", "AI written as IA"]];
+let locale = "pt-BR", mode = "sample", sample = null, ctl = null;
+const live = {};
+
+const current = () => mode === "bad" ? corrupt(SAMPLES[locale]) : (mode === "live" || mode === "repaired") ? live[locale] : SAMPLES[locale];
+const status = (t) => { $("status").textContent = t; };
+
+function chip(kind, text) { const s = document.createElement("span"); s.className = "pill " + kind; s.textContent = text; return s; }
+
+function render() {
+  const out = current(), v = validate(out);
+  document.querySelectorAll(".tabs button").forEach((b) => b.setAttribute("aria-selected", String(b.dataset.l === locale)));
+  $("thLocale").textContent = locale; $("pLocale").textContent = locale;
+  $("label").textContent = LABEL[mode];
+  $("break").textContent = mode === "bad" ? "Show the real reply" : "Feed it a bad reply";
+  $("checks").replaceChildren(...CHECKS.map(([c, label]) => {
+    const n = v.hard.filter((f) => f.check === c).length;
+    return chip(n ? "bad" : "ok", (n ? "✗ " + n + " · " : "✓ ") + label);
+  }), chip(v.soft.length ? "warn" : "ok", (v.soft.length ? "! " + v.soft.length + " · " : "✓ ") + "Labels fit"));
+  const strings = (out && out.strings) || {};
+  const keys = [...new Set([...Object.keys(SOURCE), ...Object.keys(strings)])];
+  $("rows").replaceChildren(...keys.map((k) => {
+    const tr = document.createElement("tr");
+    const td = (cls, text) => { const c = document.createElement("td"); if (cls) c.className = cls; c.textContent = text; tr.append(c); return c; };
+    td("k", k); td("", SOURCE[k] ?? "(not in source)");
+    const has = typeof strings[k] === "string";
+    td(has ? "" : "missing", has ? strings[k] : "(missing)");
+    const cell = td("", "");
+    const issues = [...v.hard.filter((f) => f.key === k).map((f) => ["bad", f.msg]), ...v.soft.filter((f) => f.key === k).map((f) => ["warn", f.msg])];
+    if (!issues.length) cell.append(chip("ok", "✓"));
+    for (const [kind, msg] of issues) { const s = document.createElement("span"); s.className = "issue " + kind; s.textContent = (kind === "bad" ? "✗ " : "! ") + msg; cell.append(s); }
+    return tr;
+  }));
+  $("notesBox").hidden = !v.notes.length;
+  $("notes").replaceChildren(...v.notes.map((n) => { const li = document.createElement("li"); li.textContent = n; return li; }));
+  $("repairBox").hidden = !v.hard.length;
+  $("repair").textContent = v.hard.length ? repairPrompt(v.hard) : "";
+  $("prompt").textContent = buildPrompt(locale);
+}
+
+document.querySelectorAll(".tabs button").forEach((b) => b.addEventListener("click", () => {
+  locale = b.dataset.l;
+  if ((mode === "live" || mode === "repaired") && !live[locale]) mode = "sample";
+  status(""); render();
+}));
+$("break").addEventListener("click", () => { mode = mode === "bad" ? (live[locale] ? "live" : "sample") : "bad"; status(""); render(); });
+$("copy").addEventListener("click", async () => {
+  try { await navigator.clipboard.writeText($("prompt").textContent); $("copied").textContent = "Copied."; }
+  catch { const r = document.createRange(); r.selectNodeContents($("prompt")); const s = getSelection(); s.removeAllRanges(); s.addRange(r); $("copied").textContent = "Selected: press Ctrl+C."; }
+});
+
+function busy(on) { $("run").disabled = on; $("stop").hidden = !on; document.querySelectorAll(".tabs button,#break").forEach((b) => { b.disabled = on; }); }
+
+$("run").addEventListener("click", async () => {
+  const loc = locale, prompt = buildPrompt(loc);
+  ctl = new AbortController(); busy(true);
+  status("Thinking… the first run asks you to allow Claude on this page.");
+  try {
+    let out = await sample.json(prompt, { signal: ctl.signal, cache: false });
+    let repaired = false;
+    const first = validate(out);
+    if (first.hard.length) {
+      status(first.hard.length + " hard check(s) failed. Sending them back once…");
+      out = await sample.json([
+        { role: "user", content: prompt },
+        { role: "assistant", content: JSON.stringify(out) },
+        { role: "user", content: repairPrompt(first.hard) },
+      ], { signal: ctl.signal, cache: false });
+      repaired = true;
+    }
+    live[loc] = out; locale = loc; mode = repaired ? "repaired" : "live";
+    status(""); render();
+  } catch (e) {
+    const code = e && e.code;
+    if (code === "cancelled") status("");
+    else if (["not_granted", "sampling_disabled", "not_declared", "capability_disabled", "capability_removed"].includes(code)) { $("run").hidden = true; status("Live runs aren't available in this view. The sample below came from the same prompt."); }
+    else if (code === "rate_limited") status("Too many calls right now. Try again in a minute.");
+    else if (code === "session_expired") status("Sign in to Claude again to run it live.");
+    else if (code === "invalid_json") status("The reply wasn't valid JSON. Run it again.");
+    else status("Claude didn't finish (" + (code || "error") + "). Run it again.");
+  } finally { busy(false); }
+});
+$("stop").addEventListener("click", () => ctl && ctl.abort());
+
+render();
+(async () => {
+  if (!window.claude || typeof window.claude.use !== "function") return;
+  sample = await window.claude.use("sample");
+  if (sample) $("run").hidden = false;
+})();
+</script>
+</body></html>
